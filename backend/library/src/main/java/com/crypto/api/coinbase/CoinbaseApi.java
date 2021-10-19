@@ -10,15 +10,14 @@ import org.springframework.http.MediaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
+/**Main class for Coinbase Api handling **/
+
 @Service
 @EnableConfigurationProperties(ApiProperties.class)
 public class CoinbaseApi {
 
   private final ApiProperties apiProperties;
   private final WebClient webClient;
-
-  private String buyPrice;
-  private String sellPrice;
 
   public CoinbaseApi(ApiProperties apiProperties) {
     this.apiProperties = apiProperties;
@@ -27,56 +26,32 @@ public class CoinbaseApi {
 
   /** Coinbase Api call methods **/
   //Api call to Coinbase for specific pair's buy price
-  public String fetchBuyPrice(String pair) {
-    this.webClient.get().uri(apiProperties.getPricesUrl() + pair + "/buy")
+  public Mono<String> fetchBuyPrice(String pair) {
+    return this.webClient.get().uri(apiProperties.getPricesUrl() + pair + "/buy")
       .accept(MediaType.APPLICATION_JSON)
       .retrieve()
       .bodyToMono(String.class)
-      .subscribe(response -> {
-        this.setBuyPrice(dataMapper(response).getAmount());
-        System.out.println(this.getBuyPrice());
-      });
-
-      return this.getBuyPrice();
-      
+      .flatMap(res -> this.extract(res));
   }
 
   //Api call to Coinbase for specific pair's sell price
-  public String fetchSellPrice(String pair) {
-    this.webClient.get().uri(apiProperties.getPricesUrl() + pair + "/sell")
+  public Mono<String> fetchSellPrice(String pair) {
+    return this.webClient.get().uri(apiProperties.getPricesUrl() + pair + "/sell")
       .accept(MediaType.APPLICATION_JSON)
       .retrieve()
       .bodyToMono(String.class)
-      .subscribe(response -> {
-        this.setSellPrice(dataMapper(response).getAmount());
-        System.out.println(this.getSellPrice());
-      });
-
-      return this.getSellPrice();
+      .flatMap(res -> this.extract(res));
       
   }
 
-  //Internal setters
-  protected void setBuyPrice(String price) {
-    this.buyPrice = price;
-  }
-
-  protected void setSellPrice(String price) {
-    this.sellPrice = price;
-  }
-
-  //Internal getters
-  protected String getBuyPrice() {
-    return this.buyPrice;
-  }
-
-  protected String getSellPrice() {
-    return this.sellPrice;
-  }
+  //Extract method to extract the amount and pass it down the line.
+  protected Mono<String> extract(String response) {
+    return Mono.just(dataMapper(response).getAmount());
+  } 
 
   /** Utility methods **/
   //Map Json reponse into acessible Java classes
-  public static Response dataMapper(String res) {
+  protected static Response dataMapper(String res) {
     ObjectMapper mapper = new ObjectMapper();
     Response response = new Response();
     try {
