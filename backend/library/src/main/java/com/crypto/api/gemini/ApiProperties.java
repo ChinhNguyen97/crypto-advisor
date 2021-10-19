@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /** Get properties from application.properties 
   * This template can be used to expand Api calls. **/
+
 @ConfigurationProperties("service")
 public class ApiProperties {
 
