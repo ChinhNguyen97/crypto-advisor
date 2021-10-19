@@ -17,9 +17,10 @@ public class DemoApplication {
   }
 
   @GetMapping("/")
-  public String home() {
+  public void home() {
     coinbaseApi.fetchBuyPrice("BTC-USD");
-    return coinbaseApi.getBuyPrice();
+    coinbaseApi.fetchSellPrice("BTC-USD");
+    //return coinbaseApi.fetchBuyPrice("BTC-USD");
   }
 
   public static void main(String[] args) {

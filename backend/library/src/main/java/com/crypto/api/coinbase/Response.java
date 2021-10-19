@@ -1,6 +1,7 @@
 package com.crypto.api.coinbase;
 
-public class ApiData {
+/** Utility class to unpack Json response **/
+public class Response {
   private Data data;
 
   public Data getData() {

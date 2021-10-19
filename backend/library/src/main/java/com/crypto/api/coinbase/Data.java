@@ -1,5 +1,6 @@
 package com.crypto.api.coinbase;
 
+/**Utility class to extract and store data object fron json response **/
 public class Data {
   private String base;
   private String currency;
