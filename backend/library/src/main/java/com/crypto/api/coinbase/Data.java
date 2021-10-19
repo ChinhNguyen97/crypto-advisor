@@ -6,16 +6,22 @@ public class Data {
   private String currency;
   private String amount;
 
+  public Data() {
+    this.base = "";
+    this.currency = "";
+    this.amount = "";
+  }
+
   public String getBase() {
-    return base;
+    return this.base;
   }
 
   public String getCurrency() {
-    return currency;
+    return this.currency;
   }
 
   public String getAmount() {
-    return amount;
+    return this.amount;
   }
 
   public void setBase(String base) {
@@ -32,6 +38,6 @@ public class Data {
 
   @Override
   public String toString() {
-    return "base=" + base + ", currency=" + currency + ", amount" + amount;
+    return "base=" + this.base + ", currency=" + this.currency + ", amount" + this.amount;
   }
 }

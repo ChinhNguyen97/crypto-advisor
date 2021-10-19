@@ -4,6 +4,10 @@ package com.crypto.api.coinbase;
 public class Response {
   private Data data;
 
+  public Response() {
+    this.data = new Data();
+  }
+
   public Data getData() {
     return data;
   }

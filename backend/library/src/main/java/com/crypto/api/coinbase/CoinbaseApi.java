@@ -33,11 +33,11 @@ public class CoinbaseApi {
       .retrieve()
       .bodyToMono(String.class)
       .subscribe(response -> {
-        setBuyPrice(dataMapper(response));
-        System.out.print(this.getBuyPrice());
+        this.setBuyPrice(dataMapper(response).getAmount());
+        System.out.println(this.getBuyPrice());
       });
 
-      return getBuyPrice();
+      return this.getBuyPrice();
       
   }
 
@@ -48,11 +48,11 @@ public class CoinbaseApi {
       .retrieve()
       .bodyToMono(String.class)
       .subscribe(response -> {
-        setSellPrice(dataMapper(response));
-        System.out.print(this.getSellPrice());
+        this.setSellPrice(dataMapper(response).getAmount());
+        System.out.println(this.getSellPrice());
       });
 
-      return getSellPrice();
+      return this.getSellPrice();
       
   }
 
@@ -76,16 +76,15 @@ public class CoinbaseApi {
 
   /** Utility methods **/
   //Map Json reponse into acessible Java classes
-  public static String dataMapper(String res) {
+  public static Response dataMapper(String res) {
     ObjectMapper mapper = new ObjectMapper();
-    String amount = "";
+    Response response = new Response();
     try {
-      Response response = mapper.readValue(res, Response.class);
-      amount = response.getAmount();
+      response = mapper.readValue(res, Response.class);
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return amount;
+    return response;
   }
 
 }
